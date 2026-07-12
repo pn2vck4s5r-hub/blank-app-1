@@ -1,13 +1,84 @@
-# Keeps uv.lock fresh so the committed lock (and the Community Cloud demo, which
-# deploys from it) tracks current Streamlit and its dependencies. All updates are
-# batched into one daily PR to keep the noise down for a template repo.
-version: 2
-updates:
-  - package-ecosystem: "uv"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    groups:
-      python-dependencies:
-        patterns:
-          - "*"
+import streamlit as st
+import time
+
+# إعدادات شاشة الآيفون والتطبيق
+st.set_page_config(
+    page_title="Rehab+ AI",
+    page_icon="🧬",
+    layout="centered",
+    initial_sidebar_state="collapsed"
+)
+
+# تنسيق المظهر ليناسب شاشات الجوال باللغة العربية
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+    html, body, [data-testid="stSidebar"], .stMarkdown, p, h1, h2, h3 {
+        font-family: 'Tajawal', sans-serif !important;
+        direction: RTL !important;
+        text-align: right !important;
+    }
+    .stButton>button {
+        background-color: #008080 !important;
+        color: white !important;
+        border-radius: 12px !important;
+        font-size: 18px !important;
+        height: 50px;
+        width: 100%;
+    }
+    .main-title {
+        color: #008080;
+        text-align: center !important;
+        font-weight: 700;
+        font-size: 28px;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# الهيدر العلوي للتطبيق
+st.markdown("<h1 class='main-title'>Rehab+ AI 🧬</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: gray;'>عيادتك الذكية للتأهيل والتغذية - بإشراف د. فريحان</p>", unsafe_allow_html=True)
+st.write("---")
+
+# قائمة التنقل للجوال
+menu = st.selectbox(
+    "📱 انتقل بين أقسام التطبيق التجريبي:",
+    ["1️⃣ التحليل الذكي للألم", "2️⃣ الفحص الذاتي الموجه", "3️⃣ خطتك العلاجية المخصصة", "4️⃣ برنامج التغذية والاستشفاء", "5️⃣ لوحة تحكم د. فريحان"]
+)
+
+if menu == "1️⃣ التحليل الذكي للألم":
+    st.subheader("📝 صف الألم أو الإصابة بلغتك الطبيعية:")
+    user_input = st.text_area(label="اكتب هنا ما تشعر به:", value="أعاني من ألم في الركبة اليمنى منذ أسبوعين بعد لعب كرة القدم، ويزداد عند صعود الدرج.")
+    if st.button("تحليل الإصابة بالذكاء الاصطناعي 🧠"):
+        with st.spinner("جاري استخراج البيانات الكلينيكية..."): time.sleep(1.5)
+        st.success("✅ تم تحليل النص بنجاح!")
+        st.info("📍 **المفصل:** الركبة اليمنى | 🗓️ **المدة:** 14 يوماً | ⚡ **المحفز:** صعود الدرج")
+        st.radio("هل هناك صوت طقطقة في المفصل؟", ["لا يوجد", "طقطقة بدون ألم", "نعم مصاحبة لألم"])
+        st.slider("حدد مستوى الألم من 1 إلى 10:", 1, 10, 5)
+
+elif menu == "2️⃣ الفحص الذاتي الموجه":
+    st.subheader("📱 اختبارات منزلية استرشادية")
+    st.warning("⚠️ تنبيه: هذه الاختبارات لا تغني عن الفحص السريري.")
+    st.info("📋 الاختبار المقترح: اختبار القرفصاء الجزئي (Squat Test)")
+    st.image("https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500", caption="طبق التمرين وتوقف فوراً إذا زاد الألم")
+    st.radio("ماذا شعرت أثناء أداء الاختبار؟", ["أديت الاختبار بنجاح وبدون ألم", "ظهر ألم شديد في صابونة الركبة", "شعور بعدم التوازن"])
+
+elif menu == "3️⃣ خطتك العلاجية المخصصة":
+    st.subheader("🏋️‍♂️ برنامج التأهيل الحركي الرقمي")
+    st.error("🚨 التشخيص الأولي المستهدف: إجهاد في أوتار الركبة (Patellar Tendinopathy).")
+    tab1, tab2 = st.tabs(["🎯 تمارين اليوم", "💡 نصائح يومية"])
+    with tab1: st.markdown("* **انقباض ثابت للفخذ:** 3 مجموعات × 10 تكرارات.\n* **رفع الساق مستقيمة:** 3 مجموعات × 12 تكرار.")
+    with tab2: st.markdown("* وضع كمادات باردة لمدة 12 دقيقة عند اشتداد الألم.\n* تجنب وضعيات ثني الركبة الحادة.")
+
+elif menu == "4️⃣ برنامج التغذية والاستشفاء":
+    st.subheader("🥗 التغذية العلاجية ومضادات الالتهاب")
+    st.success("🎯 الهدف الحالي: تقليل التهاب الأنسجة وتسريع الاستشفاء.")
+    st.markdown("- **مصادر الأوميغا 3:** السلمون، التونة، المكسرات.\n- **محفزات الاستشفاء:** الكركم، الزنجبيل splinter، التوت الأزرق.")
+    st.metric(label="💧 مستهدف شرب الماء اليومي", value="3.5 لتر")
+
+elif menu == "5️⃣ لوحة تحكم د. فريحان":
+    st.subheader("👨‍⚕️ مراقبة تطور حالة المرضى (للأخصائي)")
+    st.write("**📈 منحنى انخفاض الألم للمريض (أحمد) هذا الأسبوع:**")
+    st.line_chart([8, 7, 6, 5, 5, 4, 3])
+    st.progress(88)
+    st.caption("المريض ملتزم بنسبة 88% بالبرنامج العلاجي.")
